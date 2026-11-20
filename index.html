@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#14251d">
+  <title>WILD WORLD</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app">
+    <section id="main-menu" class="screen menu-screen">
+      <div class="menu-backdrop"></div>
+      <div class="menu-content">
+        <div class="eyebrow">PETUALANGAN DIMULAI DI SINI</div>
+        <h1>WILD <span>WORLD</span></h1>
+        <p class="subtitle">Jelajahi. Bertahan hidup. Jinakkan alam liar.</p>
+        <div class="menu-buttons">
+          <button class="primary" id="play-button">Mulai Permainan</button>
+          <button id="continue-button" disabled>Lanjutkan</button>
+          <button id="worlds-button">Pilih Dunia</button>
+          <button id="settings-button">Pengaturan</button>
+          <button id="about-button">Tentang Game</button>
+        </div>
+        <div class="menu-footer">VERSI PENGEMBANGAN • 2D SIDE VIEW</div>
+      </div>
+      <div class="menu-landscape" aria-hidden="true">
+        <div class="sun"></div><div class="hill hill-back"></div><div class="hill hill-front"></div>
+        <div class="menu-tree tree-one"></div><div class="menu-tree tree-two"></div>
+      </div>
+    </section>
+
+    <section id="world-screen" class="screen modal-screen hidden">
+      <div class="dialog">
+        <button class="close-button" data-back="main-menu">×</button>
+        <div class="eyebrow">PETUALANGANMU</div><h2>Pilih Dunia</h2>
+        <div id="world-list" class="world-list"></div>
+        <div class="dialog-actions">
+          <button class="primary" id="create-world-button">+ Buat Dunia Baru</button>
+          <button data-back="main-menu">Kembali</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="create-screen" class="screen modal-screen hidden">
+      <div class="dialog">
+        <button class="close-button" data-back="world-screen">×</button>
+        <div class="eyebrow">DUNIA BARU</div><h2>Buat Dunia</h2>
+        <label>Nama dunia<input id="world-name" maxlength="22" value="Dunia Baru" autocomplete="off"></label>
+        <label>Tipe dunia<select id="world-type"><option value="normal">Normal</option><option value="peaceful">Damai</option></select></label>
+        <div class="dialog-actions"><button class="primary" id="start-world-button">Buat & Mainkan</button><button data-back="world-screen">Batal</button></div>
+      </div>
+    </section>
+
+    <section id="settings-screen" class="screen modal-screen hidden">
+      <div class="dialog">
+        <button class="close-button" data-back="main-menu">×</button>
+        <div class="eyebrow">SESUAIKAN PERMAINAN</div><h2>Pengaturan</h2>
+        <label>Volume efek <input id="volume-setting" type="range" min="0" max="100" value="65"></label>
+        <label>Kecepatan permainan
+          <select id="speed-setting"><option value="1">Normal</option><option value="1.2">Cepat</option><option value=".85">Santai</option></select>
+        </label>
+        <p class="muted">Pengaturan disimpan di perangkat ini.</p>
+        <div class="dialog-actions"><button class="primary" id="save-settings">Simpan</button><button data-back="main-menu">Kembali</button></div>
+      </div>
+    </section>
+
+    <section id="about-screen" class="screen modal-screen hidden">
+      <div class="dialog">
+        <button class="close-button" data-back="main-menu">×</button>
+        <div class="eyebrow">TENTANG PROYEK</div><h2>WILD WORLD</h2>
+        <p>Game survival 2D side-view dengan gaya visual halus. Bangun tempat tinggal, kumpulkan sumber daya, buat perlengkapan, jelajahi dunia, dan temukan berbagai spesies hewan untuk dijinakkan.</p>
+        <p class="muted">Ini adalah versi fondasi yang sedang dikembangkan. Fitur besar akan ditambahkan bertahap.</p>
+        <div class="dialog-actions"><button class="primary" data-back="main-menu">Mengerti</button></div>
+      </div>
+    </section>
+
+    <section id="game-screen" class="screen game-screen hidden">
+      <canvas id="game-canvas"></canvas>
+      <header class="game-hud">
+        <div class="status-card">
+          <div class="player-label">PENJELAJAH</div>
+          <div class="health-track"><div id="health-fill"></div></div>
+          <div id="health-text">100 / 100 HP</div>
+        </div>
+        <div class="day-card"><span id="weather-icon">☀</span><div><b id="clock-text">08:00</b><small id="day-text">Hari 1</small></div></div>
+        <button class="icon-button" id="pause-button" aria-label="Jeda">Ⅱ</button>
+      </header>
+      <div class="resource-strip" id="resource-strip">🪵 0 <span>🪨 0</span> <span>🍃 0</span></div>
+      <div class="hotbar" id="hotbar">
+        <button class="hot-slot selected" data-slot="0"><span>✦</span><small>1</small></button>
+        <button class="hot-slot" data-slot="1"><span>🪵</span><small>2</small></button>
+        <button class="hot-slot" data-slot="2"><span>🪨</span><small>3</small></button>
+        <button class="hot-slot" data-slot="3"><span>🍃</span><small>4</small></button>
+        <button class="hot-slot" data-slot="4"><span>＋</span><small>5</small></button>
+      </div>
+      <div class="game-actions">
+        <button id="inventory-button">Tas</button><button id="interact-button">Ambil</button>
+      </div>
+      <div class="touch-controls">
+        <div class="move-pad">
+          <button data-control="left">◀</button><button data-control="right">▶</button>
+        </div>
+        <button class="jump-button" data-control="jump">LOMPAT</button>
+      </div>
+    </section>
+
+    <section id="pause-screen" class="screen modal-screen hidden">
+      <div class="dialog compact">
+        <div class="eyebrow">PERMAINAN DIJEDA</div><h2>Istirahat Sebentar</h2>
+        <button class="primary" id="resume-button">Lanjut Bermain</button>
+        <button id="pause-inventory-button">Inventaris</button>
+        <button id="exit-button">Keluar ke Menu</button>
+      </div>
+    </section>
+
+    <section id="inventory-screen" class="screen modal-screen hidden">
+      <div class="dialog inventory-dialog">
+        <button class="close-button" data-back="game-screen">×</button>
+        <div class="eyebrow">BARANG BAWAAN</div><h2>Inventaris</h2>
+        <div class="inventory-layout">
+          <div class="inventory-grid" id="inventory-grid"></div>
+          <aside><h3>Perlengkapan</h3><div class="equipment-slot">Kepala</div><div class="equipment-slot">Badan</div><div class="equipment-slot">Kaki</div><div class="equipment-slot">Aksesori</div></aside>
+        </div>
+        <p class="muted">Kumpulkan bahan untuk membuka resep kerajinan pada pembaruan berikutnya.</p>
+        <button class="primary" data-back="game-screen">Kembali Bermain</button>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
